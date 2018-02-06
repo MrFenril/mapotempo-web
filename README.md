@@ -6,14 +6,15 @@ Route optimization with numerous stops. Based on [OpenStreetMap](http://www.open
 
 1. [Project dependencies](#project-dependencies)
 2. [Install Bundler Gem](#install-bundler-gem)
-3. [Requirements for all systems](#requirements-for-all-systems)
-4. [Install project](#install-project)
-5. [Configuration](#configuration)
-6. [Background Tasks](#background-tasks)
-7. [Initialization](#nitialization)
-8. [Running](#running)
-9. [Running on producton](#running-on-production)
-10. [Launch tests](#launch-tests)
+3. [Install Node modules](#install-node-modules)
+4. [Requirements for all systems](#requirements-for-all-systems)
+5. [Install project](#install-project)
+6. [Configuration](#configuration)
+7. [Background Tasks](#background-tasks)
+8. [Initialization](#Initialization)
+9. [Running](#running)
+10. [Running on producton](#running-on-production)
+11. [Launch tests](#launch-tests)
 
 ### Project dependencies
 
@@ -34,7 +35,7 @@ Install ruby (>2.0 is needed), bundler and some dependencies from system package
 
 Install Ruby (> 2.0 is needed) and other dependencies from system package.
 
-For exemple, with __Ubuntu__, follows this instructions :
+For example, with __Ubuntu__, follows this instructions:
 
 To know the last version, check with this command tools
 
@@ -44,7 +45,7 @@ First, install Ruby :
 
     sudo apt install ruby2.1.8 ruby2.1.8-dev
 
-Next, install Postgrsql environement :
+Next, install Postgrsql environment:
 
      postgresql postgresql-client-9.6 postgresql-server-dev-9.6
 
@@ -57,7 +58,7 @@ __It's important to have all of this installed packages before installing follow
 ### Install Bundler Gem
 
 Bundler provides a consistent environment for Ruby projects by tracking and installing the exact gems and versions that are needed.
-For more informations see [Bundler website](http://bundler.io).
+For more information see [Bundler website](http://bundler.io).
 
 To install Bundler Ruby Gem:
 
@@ -66,17 +67,30 @@ To install Bundler Ruby Gem:
 
 The GEM_HOME variable is the place who are stored Ruby gems.
 
+### Install Node modules
+
+In addition to gems, node modules must be installed for Javascript files.
+To install all dependencies, run the following command after installing yarn:
+
+    yarn install
+
+All packages will be available through _node_modules_ directory.
+
+If a npm package includes assets, they must be declared in the _config/initializers/assets.rb_ file:
+
+    Rails.application.config.assets.paths += Dir["#{Rails.root}/node_modules/package/asset_dir"]
+
 ## Requirements for all systems
 
 Now add gem bin directory to path with :
 
     export PATH=$PATH:~/.gem/ruby/2.1.8/bin
 
-Add Environement Variables into the end of your .bashrc file :
+Add Environement Variables into the end of your .bashrc file:
 
     nano ~/.bashrc
 
-Add following code :
+Add following code:
 
     # RUBY GEM CONFIG
     export GEM_HOME=~/.gem/ruby/2.1.8
@@ -84,7 +98,7 @@ Add following code :
 
 Save changes and Quit
 
-Run this command to activate your modifications :
+Run this command to activate your modifications:
 
     source ~/.bashrc
 
@@ -92,11 +106,11 @@ Run this command to activate your modifications :
 
 For the following installation, your current working directory needs to be the mapotempo-web root directory.
 
-Clone the project :
+Clone the project:
 
     git clone git@github.com:Mapotempo/mapotempo-web.git
 
-Go to project directory :
+Go to project directory:
 
     cd mapotempo-web
 
@@ -104,11 +118,11 @@ Add the ruby version :
 
     echo '2.1.8' >> .ruby-version
 
-And finally install gem project dependencies with :
+And finally install gem project dependencies with:
 
     bundle install
 
-I you have this message :
+If you have this message:
 >Important: You may need to add a javascript runtime to your Gemfile in order for bootstrap's LESS files to compile to CSS.
 
 Don't worry, we use SASS to compile CSS and not LESS.
@@ -162,7 +176,7 @@ PG_PASSWORD: "[userpassword]"
 
 By default, the *user*/*password* variables are set to *mapotempo*/*mapotempo*
 
-For informations, to __delete a user__ use :
+For informations, to __delete a user__ use:
 
     dropuser [username]
 
@@ -170,17 +184,25 @@ To __delete a database__ :
 
     dropdb [database]
 
-As normal user, we call rake to initialize databases (load schema and demo data) :
+As normal user, we call rake to initialize databases (load schema and demo data):
 
     rake db:setup
 
 ## Running
 
-Start standalone rails server with
+Start standalone rails server with:
 
     rails server
 
+Start Webpack to auto-compile JS assets (and reload browser on change):
+
+    ./bin/webpack-dev-server
+
 Enjoy at [http://localhost:3000](http://localhost:3000)
+
+To run both server in on command, you can launch Guard (configuration in _Guardfile_):
+
+    guard
 
 Start the background jobs runner with
 
