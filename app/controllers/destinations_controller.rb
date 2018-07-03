@@ -71,7 +71,7 @@ class DestinationsController < ApplicationController
       p = destination_params
       time_with_day_params(params, p, [:open1, :close1, :open2, :close2])
       @destination = current_user.customer.destinations.build(p)
-
+      
       if @destination.save && current_user.customer.save
         format.html { redirect_to link_back || edit_destination_path(@destination), notice: t('activerecord.successful.messages.created', model: @destination.class.model_name.human) }
       else
@@ -225,6 +225,8 @@ class DestinationsController < ApplicationController
       :comment,
       :geocoding_accuracy,
       :geocoding_level,
+      :geocoder_version,
+      :geocoded_at,
       tag_ids: [],
       visits_attributes: [
         :id,

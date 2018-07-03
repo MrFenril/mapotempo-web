@@ -206,10 +206,11 @@ const destinations_form = function(params, api) {
     $('[name$=\\[name\\]]', row).val(destination.name);
     $('[name$=\\[street\\]]', row).val(destination.street);
     $('[name$=\\[postalcode\\]]', row).val(destination.postalcode);
-    $('[name$=\\[city\\]]', row).val(destination.city);
+      $('[name$=\\[city\\]]', row).val(destination.city);
     $('[name$=\\[country\\]]', row).val(destination.country);
     $('[name$=\\[lat\\]]', row).val(destination.lat);
     $('[name$=\\[lng\\]]', row).val(destination.lng);
+      setGeocoderInfo(destination);
     if ($.isNumeric(destination.lat) && $.isNumeric(destination.lng)) {
       if (destination_id in markers) {
         markers[destination_id].setLatLng(new L.LatLng(destination.lat, destination.lng));
@@ -292,6 +293,8 @@ const destinations_form = function(params, api) {
 
               });
 
+            setGeocoderInfo(json.geocoder_info);
+
             $("#reverse-geocode").html(json.result.label).append(button);
 
           } else {
@@ -302,6 +305,17 @@ const destinations_form = function(params, api) {
       });
     }
   };
+
+  function setGeocoderInfo(geocoderInfo) {
+      if (api == 'stores') {
+          $("#store_geocoder_version").val(geocoderInfo.geocoder_version);
+          $("#store_geocoded_at").val(geocoderInfo.geocoded_at);
+      }
+      else {
+          $("#destination_geocoder_version").val(geocoderInfo.geocoder_version);
+          $("#destination_geocoded_at").val(geocoderInfo.geocoded_at);
+      }
+  }
 
   map.on('click', function(mouseEvent) {
     if (pointing !== false) {
