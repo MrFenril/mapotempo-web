@@ -80,6 +80,12 @@ $sidebar-margins: 10px;
       }
     }
   }
+
+  #multiple_plannings_actions > .form-inline {
+    .form-group {
+      margin-right: 5px;
+    }
+  }
 }
 
 [data-controller='plannings'] {
