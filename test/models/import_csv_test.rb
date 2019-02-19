@@ -92,4 +92,22 @@ class ImportCsvTest < ActiveSupport::TestCase
     assert_equal 1.0, destination.reload.lat
     assert_equal 1.0, destination.reload.lng
   end
+
+  test 'should not geocode customers with specific columns when no lat/lng' do
+    destination = Destination.create(
+      customer: customers(:customer_one),
+      name: 'Place Picard', postalcode: '33000',
+      city: 'Bordeaux', lat: 44.837663, lng: -0.579717,
+      geocoding_accuracy: 0.98, geocoding_level: 5, ref: 'p-12'
+    )
+
+    file2 = ActionDispatch::Http::UploadedFile.new(tempfile: File.new(Rails.root.join('test/fixtures/files/import_customers_and_do_not_geocode.csv')))
+    file2.original_filename = 'import_customers_and_do_not_geocode.csv'
+    import_csv = ImportCsv.new(importer: @importer, replace: false, file: file2, column_def: { name: 'name' })
+    import_csv.import
+
+    # must have pass by code_bulk method
+    assert_not_equal 1.0, destination.reload.lat
+    assert_not_equal 1.0, destination.reload.lng
+  end
 end
